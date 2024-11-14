@@ -1,0 +1,43 @@
+[
+  { 
+    "restaurant_id": 1, 
+    "user_id": 1, 
+    "category": "Ramp", 
+    "rating": 4 
+  },
+  { 
+    "restaurant_id": 1, 
+    "user_id": 1, 
+    "category": "Seating", 
+    "rating": 5 
+  },
+  { 
+    "restaurant_id": 1, 
+    "user_id": 1, 
+    "category": "Waiting Area", 
+    "rating": 5 
+  },  { 
+    "restaurant_id": 1, 
+    "user_id": 1, 
+    "category": "Menu", 
+    "rating": 5 
+  },
+  { 
+    "restaurant_id": 1, 
+    "user_id": 1, 
+    "category": "Service Animals", 
+    "rating": 5 
+  },
+  { 
+    "restaurant_id": 1, 
+    "user_id": 1, 
+    "category": "Food", 
+    "rating": 5 
+  },
+  { 
+    "restaurant_id": 1, 
+    "user_id": 1, 
+    "category": "Staff Decorum", 
+    "rating": 5 
+  }
+]

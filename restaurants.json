@@ -1,0 +1,16 @@
+[
+  { 
+    "restaurant_id": 1, 
+    "name": "Aladdin Gyro-Cery & Deli", 
+    "description": "No-frills Mediterranean staple for hearty gyros, falafel & shawarma, plus Turkish coffee.", 
+    "address": "4139 University Wy NE, Seattle, WA 98105",
+    "accessibility-rating": 2
+  },
+  { 
+    "restaurant_id": 2, 
+    "name": "Cafe on the Ave", 
+    "description": "Coffeehouse with a big American menu of breakfast staples & sandwiches in comfy digs with free WiFi.", 
+    "address": "4201 University Wy NE, Seattle, WA 98105.",
+    "accessibility-rating": 2 
+  }
+]
