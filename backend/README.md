@@ -4,7 +4,10 @@
 - Python Flask (>= 3.0.0)
 
 # Running the Server
-From the root of this project, run `python -m backend`
+From the root of this project, run `python -m backend`. Its optional argument are:
+- --host (str, default: `'localhost'`): The host for the server
+- --port (int, default: `3000`): The port for the server
+- --debug (bool, default: `False`): Whether to turn on debug statements (just specify `--debug` to turn this flag on)
 
 # Notes
 
