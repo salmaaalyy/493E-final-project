@@ -9,6 +9,7 @@ from typing import Tuple, List
 
 app = Flask(__name__)
 
+
 @app.route('/heartbeat', methods=["GET"])
 def heartbeat():
     """Returns a Stream to indicate that the server is alive
@@ -37,6 +38,45 @@ def heartbeat():
             time.sleep(1)
     return Response(heartbeat_generator(), content_type="application/octet-stream")
 
+@app.route('/register_user', methods="GET")
+def register_user() -> int:
+    """Registers a user into the system, and logs them in
+    
+    Endpoint: /register_user
+    
+    Arguments:
+        HTTP Request Body (str): JSON that contains:
+            name : The name of the user
+            password : The password for the user
+
+    Returns:
+        int: The login token, or common.FAILURE_TOKEN if it doesn't succeed
+    """
+    
+    user_information = request.get_json()
+    name = user_information['name']
+    password = user_information['password']
+    raise NotImplementedError()
+
+@app.route('/login', methods="GET")
+def login() -> int:
+    """Attempts to log a user into the system
+    
+    Endpoint: /login
+
+    Arguments:
+        HTTP Request Body (str): JSON that contains:
+            name : The name of the user
+            password : The password for the user
+
+    Returns:
+        int: The login token, or common.FAILURE_TOKEN if it doesn't succeed
+    """
+    user_information = request.get_json()
+    name = user_information['name']
+    password = user_information['password']
+    raise NotImplementedError()
+
 @app.route('/search', methods=["GET"])
 def search_restaurants() -> List[str]:
     """Provides a list of matching restaurants given a search query
@@ -49,7 +89,8 @@ def search_restaurants() -> List[str]:
     
     Return:
         The list of restaurants matching the query. If query is not specified
-        or if the query is empty, it returns at most 10 restaurants
+        or if the query is empty, it returns all restaurants (so, we use this
+        endpoint to also get the names of all restaurants)
     """
     query = request.args.get("query", "")
     raise NotImplementedError()
@@ -80,7 +121,10 @@ def add_review() -> RestaurantDatabase:
     Arguments:
         user (str): The user making the review
         restaurant (str): The name of the restaurant
-        HTTP Body: A Review object (in JSON, of course)
+        HTTP Body: A dictionary with the following structure:
+            token : The integer token,
+            review : The written review,
+            ratings : {category : rating from 0 to 5, or -1 if not specified}
 
     Return:
         The new restaurant database for the restaurant
@@ -88,7 +132,11 @@ def add_review() -> RestaurantDatabase:
     """
     query = request.args.get("user")
     restaurant = request.args.get("restaurant")
-    data = Review.from_dict(request.get_json())
+    data = request.get_json()
+    token = data['token']
+    user = 1 # Put code here
+    data['user'] = user.name
+    data = Review.from_dict(data)
     raise NotImplementedError()
 
 @app.route('/filter_reviews', methods="GET")
