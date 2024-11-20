@@ -1,4 +1,3 @@
-
 from ..common.review_categories import ReviewCategory, resolve_category
 
 from typing import Dict, List
@@ -82,7 +81,7 @@ class Reviews:
         Returns:
             Reviews: A Reviews object based off of data
         """
-        return Reviews(data)
+        return Reviews(data['reviews'])
 
     def get_ratings_summary(self) -> Dict[ReviewCategory, float]:
         """Provides a ratings summary of the reviews in this
@@ -91,7 +90,7 @@ class Reviews:
             Dict[ReviewCategory, float]: A dictionary that maps from
             each category to the mean rating given for that category
         """
-        return {category : total / count for category, (total, count) in zip(ReviewCategory, zip(self.ratings_sum, self.ratings_count))}
+        return {category : self.ratings_sum[category] / self.ratings_count[category] for category in ReviewCategory if self.ratings_count[category]}
 
     def get_summary(self):
         """Provides a summary of the review
@@ -118,10 +117,11 @@ class Reviews:
         Args:
             review (Review): The review to add to this
         """
+        review = review
         old_review = self.reviews.get(review.user)
         self.reviews[review.user] = review
         
         # Update our ratings_sum and ratings_count
         for category in ReviewCategory:
-            self.ratings_sum[category] += review.ratings.get(category, 0) - old_review.ratings.get(category, 0)
-            self.ratings_count[category] += (1 if category in review.ratings else 0) - (1 if category in old_review.ratings else 0)
+            self.ratings_sum[category] += review.ratings.get(category, 0) - old_review.ratings.get(category, 0) if old_review else 0
+            self.ratings_count[category] += (1 if category in review.ratings else 0) - (1 if category in old_review.ratings else 0) if old_review else 0

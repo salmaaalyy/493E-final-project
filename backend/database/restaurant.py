@@ -93,7 +93,7 @@ class RestaurantDatabase:
         
         # Make the restaurant info section
         result['restaurant_info'] = self.restaurant_info
-        result['restaurant_info'].pop('summary')
+        del result['restaurant_info'].summary
     
         # Make the review summary section
         result['review_summary'] = self.reviews.get_summary()

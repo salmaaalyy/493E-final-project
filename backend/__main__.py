@@ -1,7 +1,10 @@
-from flask import Flask, Response, request, jsonify
+from flask import Flask, Response, request
 import argparse
+import json
 
+from .common.json import JSONEncoder
 from .common.constants import DEFAULT_HOST, DEFAULT_PORT
+from .common.codes import HTTP_CODE
 from .common.review_categories import resolve_category
 from .database.restaurant import RestaurantDatabase
 from .database.reviews import Review
@@ -43,7 +46,7 @@ def heartbeat():
             time.sleep(1)
     return Response(heartbeat_generator(), content_type="application/octet-stream")
 
-@app.route('/register_user', methods=["GET"])
+@app.route('/register_user', methods=["POST"])
 def register_user() -> int:
     """Registers a user into the system, and logs them in
     
@@ -66,17 +69,17 @@ def register_user() -> int:
     # Attempt to Register User
     user = User(name, password)
     if not users.add_user(user):
-        return f"User not registered, name {name} already exists"
+        return f"User not registered, name {name} already exists", HTTP_CODE.BAD_REQUEST
     
     # Attempt to login
     token = users.login(user)
     if not token:
-        return "[System Bug] Something has gone wrong on our end!"
+        return "[System Bug] Something has gone wrong on our end!", HTTP_CODE.SERVER_BAD
     
     # Return login token
-    return jsonify(token)
+    return json.dumps(token, cls=JSONEncoder)
 
-@app.route('/login', methods=["GET"])
+@app.route('/login', methods=["POST"])
 def login() -> int:
     """Attempts to log a user into the system
     
@@ -90,6 +93,7 @@ def login() -> int:
     Returns:
         int: The login token, or common.FAILURE_TOKEN if it doesn't succeed
     """
+    # Argument Parse
     user_information = request.get_json()
     name = user_information['name']
     password = user_information['password']
@@ -98,10 +102,34 @@ def login() -> int:
     user = User(name, password)
     token = users.login(user)
     if not token:
-        return "This user does not exist (or the password is wrong)"
+        if users.contains_name(user.name):
+            return f"Incorrect password for user {user.name}", HTTP_CODE.UNAUTHORIZED
+        return "This user does not exist", HTTP_CODE.BAD_REQUEST
     
     # Return login token
-    return jsonify(token)
+    return json.dumps(token, cls=JSONEncoder)
+
+@app.route('/logout', methods=["POST"])
+def logout() -> str:
+    """Logs a user out
+    
+    Endpoint: /logout
+
+    Returns:
+        str: Either nothing (Success), or an error
+    """
+    
+    # Argument Parse
+    user_information = request.get_json()
+    token = user_information['token']
+    
+    # Attempt to login
+    success = users.logout(token)
+    if not success:
+        return "This user was not logged in, or doesn't exist", HTTP_CODE.BAD_REQUEST
+    
+    # Return success
+    return Response(status=200)
 
 @app.route('/search', methods=["GET"])
 def search_restaurants() -> List[str]:
@@ -142,13 +170,13 @@ def get_data() -> RestaurantDatabase:
     restaurant = request.args.get("restaurant")
     
     # Get it and check it it exists
-    manager.get_restaurant(restaurant)
+    restaurant_data = manager.get_restaurant(restaurant)
     
     if not restaurant:
-        return "This restaurant doesn't exist"
+        return "This restaurant doesn't exist", HTTP_CODE.NOT_FOUND
     
     # Return the restaurant data
-    return jsonify(restaurant)
+    return json.dumps(restaurant_data.to_webpage_format(), cls=JSONEncoder)
 
 @app.route('/add_review', methods=["POST"])
 def add_review() -> RestaurantDatabase:
@@ -176,22 +204,23 @@ def add_review() -> RestaurantDatabase:
     # Modify one of the arguments to get the user,
     # rejecting the token if it doesn't exist
     token = data['token']
+    del data['token']
     user = users.validate_user(token)
     if not user:
-        return "The token provided is invalid for any user"
+        return "The token provided is invalid for any user", HTTP_CODE.UNAUTHORIZED
     data['user'] = user.name
     review = Review.from_dict(data)
     
     # Now, get the restaurant database
     restaurant_data = manager.get_restaurant(restaurant)
     if not restaurant_data:
-        return "The restaurant provided is not a valid one"
+        return "The restaurant provided is not a valid one", HTTP_CODE.NOT_FOUND
     
     # Add the review
     restaurant_data.add_review(review)
     
     # Finally, provide the updated database
-    return restaurant_data
+    return json.dumps(restaurant_data.to_webpage_format(), cls=JSONEncoder)
 
 @app.route('/filter_reviews', methods=["GET"])
 def filter_reviews() -> List[Review]:
@@ -218,10 +247,9 @@ def filter_reviews() -> List[Review]:
     # Get the restaurant database
     restaurant_data = manager.get_restaurant(restaurant)
     if not restaurant_data:
-        return "The restaurant provided is not a valid one"
+        return "The restaurant provided is not a valid one", HTTP_CODE.NOT_FOUND
 
-    # Filter the reviews
-    return restaurant_data.reviews.filter(*filters)
+    return json.dumps(restaurant_data.reviews.filter(*filters), cls=JSONEncoder)    
 
 
 def parse_args() -> Tuple[str, int, bool]:
@@ -250,3 +278,7 @@ if __name__ == "__main__":
     host, port, debug = parse_args()
     print(host, port, debug)
     app.run(host=host, port=port, debug=debug)
+    # Save all data
+    print("Saving user and restaurant data, please wait")
+    users.save()
+    manager.save()

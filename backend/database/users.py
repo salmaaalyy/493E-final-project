@@ -127,11 +127,18 @@ class Users:
         The user is now active if a token was returned
         """
         if user in self.users:
-            if not user in self.active_users:
+            # Generate non-duplicate token
+            generated_token = random.randint(TOKEN_LOWER_BOUND, TOKEN_HIGHER_BOUND)
+            while generated_token in self.active_tokens:
                 generated_token = random.randint(TOKEN_LOWER_BOUND, TOKEN_HIGHER_BOUND)
-                self.active_users[user] = generated_token
-                self.active_tokens[generated_token] = user
-            return self.active_users[user]
+            
+            # Register token into this
+            if not user in self.active_users:
+                self.active_users[user] = {generated_token}
+            else:
+                self.active_users[user].add(generated_token)
+            self.active_tokens[generated_token] = user
+            return generated_token
         return None
     
     def logout(self, token : int) -> bool:
@@ -146,7 +153,9 @@ class Users:
         if token in self.active_tokens:
             user = self.active_tokens[token]
             self.active_tokens.pop(token)
-            self.active_users.pop(user)
+            self.active_users.get(user).remove(token)
+            if not self.active_users[user]:
+                del self.active_users[user]
             return True
         return False
     
