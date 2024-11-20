@@ -12,6 +12,6 @@ class ReviewCategory(Enum):
 
 def resolve_category(category : str) -> ReviewCategory | None:
     for value in ReviewCategory:
-        if category.lower() == value.name().lower():
+        if category.lower() == value.name.lower():
             return value
     return None

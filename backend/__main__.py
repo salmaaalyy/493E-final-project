@@ -1,13 +1,18 @@
-from flask import Flask, Response, request
+from flask import Flask, Response, request, jsonify
 import argparse
 
 from .common.constants import DEFAULT_HOST, DEFAULT_PORT
+from .common.review_categories import resolve_category
 from .database.restaurant import RestaurantDatabase
 from .database.reviews import Review
+from .database.manager import DatabaseManager
+from .database.users import Users, User
 
 from typing import Tuple, List
 
 app = Flask(__name__)
+manager = DatabaseManager()
+users = Users()
 
 
 @app.route('/heartbeat', methods=["GET"])
@@ -38,7 +43,7 @@ def heartbeat():
             time.sleep(1)
     return Response(heartbeat_generator(), content_type="application/octet-stream")
 
-@app.route('/register_user', methods="GET")
+@app.route('/register_user', methods=["GET"])
 def register_user() -> int:
     """Registers a user into the system, and logs them in
     
@@ -53,12 +58,25 @@ def register_user() -> int:
         int: The login token, or common.FAILURE_TOKEN if it doesn't succeed
     """
     
+    # Argument Parse
     user_information = request.get_json()
     name = user_information['name']
     password = user_information['password']
-    raise NotImplementedError()
+    
+    # Attempt to Register User
+    user = User(name, password)
+    if not users.add_user(user):
+        return f"User not registered, name {name} already exists"
+    
+    # Attempt to login
+    token = users.login(user)
+    if not token:
+        return "[System Bug] Something has gone wrong on our end!"
+    
+    # Return login token
+    return jsonify(token)
 
-@app.route('/login', methods="GET")
+@app.route('/login', methods=["GET"])
 def login() -> int:
     """Attempts to log a user into the system
     
@@ -75,7 +93,15 @@ def login() -> int:
     user_information = request.get_json()
     name = user_information['name']
     password = user_information['password']
-    raise NotImplementedError()
+    
+    # Attempt to login
+    user = User(name, password)
+    token = users.login(user)
+    if not token:
+        return "This user does not exist (or the password is wrong)"
+    
+    # Return login token
+    return jsonify(token)
 
 @app.route('/search', methods=["GET"])
 def search_restaurants() -> List[str]:
@@ -92,10 +118,13 @@ def search_restaurants() -> List[str]:
         or if the query is empty, it returns all restaurants (so, we use this
         endpoint to also get the names of all restaurants)
     """
+    # Argument Parse
     query = request.args.get("query", "")
-    raise NotImplementedError()
+    
+    # Return List of restaurants matching query
+    return manager.get_restaurant_list(query)
 
-@app.route('/get_data', methods="GET")
+@app.route('/get_data', methods=["GET"])
 def get_data() -> RestaurantDatabase:
     """Gets all data on a restaurant from a name
     
@@ -108,18 +137,27 @@ def get_data() -> RestaurantDatabase:
         RestaurantDatabase: The restaurant database, which includes
         all display information about it.
     """
+    
+    # Argument Parse
     restaurant = request.args.get("restaurant")
-    raise NotImplementedError()
+    
+    # Get it and check it it exists
+    manager.get_restaurant(restaurant)
+    
+    if not restaurant:
+        return "This restaurant doesn't exist"
+    
+    # Return the restaurant data
+    return jsonify(restaurant)
 
-@app.route('add_review', methods="POST")
+@app.route('/add_review', methods=["POST"])
 def add_review() -> RestaurantDatabase:
     """Adds a review to a restaurant
 
-    Endpoint: /add_review?user=<str>&restaurant=<str>
+    Endpoint: /add_review?restaurant=<str>
     Data: Review
 
     Arguments:
-        user (str): The user making the review
         restaurant (str): The name of the restaurant
         HTTP Body: A dictionary with the following structure:
             token : The integer token,
@@ -130,16 +168,32 @@ def add_review() -> RestaurantDatabase:
         The new restaurant database for the restaurant
         the review was posted to
     """
-    query = request.args.get("user")
+    
+    # Argument Parse
     restaurant = request.args.get("restaurant")
     data = request.get_json()
+    
+    # Modify one of the arguments to get the user,
+    # rejecting the token if it doesn't exist
     token = data['token']
-    user = 1 # Put code here
+    user = users.validate_user(token)
+    if not user:
+        return "The token provided is invalid for any user"
     data['user'] = user.name
-    data = Review.from_dict(data)
-    raise NotImplementedError()
+    review = Review.from_dict(data)
+    
+    # Now, get the restaurant database
+    restaurant_data = manager.get_restaurant(restaurant)
+    if not restaurant_data:
+        return "The restaurant provided is not a valid one"
+    
+    # Add the review
+    restaurant_data.add_review(review)
+    
+    # Finally, provide the updated database
+    return restaurant_data
 
-@app.route('/filter_reviews', methods="GET")
+@app.route('/filter_reviews', methods=["GET"])
 def filter_reviews() -> List[Review]:
     """Filters a list of reviews for a restaurant
     
@@ -153,10 +207,22 @@ def filter_reviews() -> List[Review]:
     Returns:
         List[Review]: The list of reviews
     """
+    
+    # Argument Parse
     restaurant = request.args.get("restaurant")
     filters = request.args.getlist("filter")
-    raise NotImplementedError()
-        
+
+    # Parse out filters even more, ignoring bad filters
+    filters = [resolve_category(filter) for filter in filters if resolve_category(filter)]
+
+    # Get the restaurant database
+    restaurant_data = manager.get_restaurant(restaurant)
+    if not restaurant_data:
+        return "The restaurant provided is not a valid one"
+
+    # Filter the reviews
+    return restaurant_data.reviews.filter(*filters)
+
 
 def parse_args() -> Tuple[str, int, bool]:
     """Parses out arguments on the command line for this program

@@ -1,8 +1,8 @@
 
 from typing import Dict, List
 
-from reviews import Reviews, Review
-from common.review_categories import ReviewCategory
+from .reviews import Reviews, Review
+from ..common.review_categories import ReviewCategory
     
 class RestaurantInfo:
     """Restaurant Info is a class that represents the
@@ -22,7 +22,7 @@ class RestaurantInfo:
         self.address = address
         self.phone = phone
     
-    @classmethod
+    @staticmethod
     def from_dict(data : Dict[str, str]):
         """Constructs a RestaurantInfo class from
         a dictionary
@@ -44,32 +44,52 @@ class RestaurantDatabase:
     """RestaurantDatabase is a database that represents all the accessibility information and other
     information that pertains to a single restaurant
     """
-    def __init__(self, restaurant_info : RestaurantInfo, review_sums : List[int], review_counts : List[int], reviews : Reviews):
+    def __init__(self, restaurant_info : RestaurantInfo, reviews : Reviews):
         """Constructs a RestaurantDatabase from its review information and other information
 
         Args:
             restaurant_info (RestaurantInfo): The RestaurantInformation object for this
-            review_sums (List[int]): The sum of each category of review for this
-            review_counts (List[int]): The number of category reviews left for each category
             reviews (Reviews): The reviews of each
         """
         self.restaurant_info = restaurant_info
-        self.review_sums = review_sums
-        self.review_counts = review_counts
         self.reviews = reviews
     
-    @classmethod
-    def from_dict(data : Dict[str, RestaurantInfo | List[int] | Reviews]):
-        return RestaurantDatabase(RestaurantInfo.from_dict(data['restaurant_info']), data['review_sums'], data['review_counts'], Reviews.from_dict(data['reviews']))
+    @staticmethod
+    def from_dict(data : Dict[str, RestaurantInfo | Reviews]):
+        """Constructs a RestaurantDatabase from a dictionary.
+
+        Args:
+            data (Dict[str, RestaurantInfo  |  List[int]  |  Reviews]): The dictionary to construct a RestaurantDatabase from.
+            The form must be:
+                restaurant_info : A restaurant_info dictionary
+                reviews : A reviews dictionary
+
+        Returns:
+            RestaurantDatabase: A RestaurantDatabase with the data from data
+        """
+        return RestaurantDatabase(RestaurantInfo.from_dict(data['restaurant_info']), Reviews.from_dict(data['reviews']))
     
-    def to_webpage_format(self, *filter : ReviewCategory) -> Dict[str, str | List[int] | List[str] | Reviews]:
+    def to_webpage_format(self, *filter : ReviewCategory) -> Dict[str, str | List[float] | List[str] | List[Review]]:
+        """Prepares this to be displayed in website format by returning a
+        dictionary version of this that is different than the serialization
+        format
+
+        Returns:
+            Dict[str, str | List[float] | List[str] | Reviews]: The dictionary that gets returned, which contains:
+                summary (str): The summary of this,
+                accessibility_summary (List[float]): The float of this,
+                restaurant_info (List[str]): Basic restaurant information (RestaurantInfo minus the summary),
+                reviews_summary (List[str]): The summary of the reviews,
+                reviews (List[Review]): The reviews for this restaurant. Look into the Review data structure to
+                figure out the form of the JSON
+        """
         result = dict()
         
         # Make the summary section
         result['summary'] = self.restaurant_info.summary
         
         # Make the accessibility summary section
-        result['accessibility_summary'] = {category : total / count for category, (total, count) in zip(ReviewCategory, zip(self.review_sums, self.review_counts))}
+        result['accessibility_summary'] = self.reviews.get_ratings_summary()
         
         # Make the restaurant info section
         result['restaurant_info'] = self.restaurant_info
@@ -84,4 +104,9 @@ class RestaurantDatabase:
         return result
 
     def add_review(self, review : Review):
+        """Adds a review to this restaurant
+
+        Args:
+            review (Review): The review to add to this
+        """
         self.reviews.add_review(review)

@@ -1,11 +1,11 @@
 import json
 
-from common.constants import DEFAULT_DATABASE
-from common.json import JSONEncoder
+from ..common.constants import DEFAULT_DATABASE
+from ..common.json import JSONEncoder
 
 from typing import Dict, List
-from restaurant import RestaurantDatabase
-from common.constants import DEFAULT_DATABASE
+from .restaurant import RestaurantDatabase
+from ..common.constants import DEFAULT_DATABASE
 
 class DatabaseManager:
     """A DatabaseManager manages all databases for restaurants registered with the "manager". Thus, a restaurant "exists" iff it is registered in the DatabaseManager.
@@ -16,11 +16,12 @@ class DatabaseManager:
 
         Args:
             database_file (str, optional): The database file to grab the manager from.
-                                           Defaults to DEFAULT_DATABASE.
+                                           Defaults to DEFAULT_DATABASE. The format must
+                                           be:
+                {Restaurant Name : RestaurantDatabase Dictionary Format}
         """
         with open(database_file, '+r') as file:
-            raw_data = json.load(file)
-            data = raw_data['restaurants']
+            data = json.load(file)
             self.restaurant_map : Dict[str, RestaurantDatabase] = dict()
             for restaurant in data:
                 self.restaurant_map[restaurant] = RestaurantDatabase.from_dict(data[restaurant])
