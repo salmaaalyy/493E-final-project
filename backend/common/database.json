@@ -1,0 +1,33 @@
+{
+    "Made Up Restaurant": {
+        "restaurant_info": {
+            "summary": "lorem ipsum ...",
+            "hours": "9 to 5",
+            "address": "62286 128th St Seattle, WA",
+            "phone": "000-000-0000"
+        }, "reviews": {
+            "reviews": {
+                "Jane Doe": {
+                    "user": "Jane Doe", 
+                    "ratings": {
+                        "RAMP": 4, "MENU": 4, "FOOD": 1, "STAFF_DECORUM": 5
+                        }, 
+                    "review": "It was... okay"
+                    },
+                "Tri Nguyen": {
+                    "user": "Tri Nguyen", 
+                    "ratings": {
+                        "RAMP": 2, "SEATING": 5
+                    }, 
+                    "review": "I loved it!!!"
+                }
+            },
+            "ratings_sum": {
+                "RAMP": 4, "WAITING_AREA": 0, "SEATING": 0, "MENU": 4, "SERVICE_ANIMALS": 0, "FOOD": 1, "STAFF_DECORUM": 5
+            },
+            "ratings_count": {
+                "RAMP": 1, "WAITING_AREA": 0, "SEATING": 0, "MENU": 1, "SERVICE_ANIMALS": 0, "FOOD": 1, "STAFF_DECORUM": 1
+            }
+        }
+    }
+}
