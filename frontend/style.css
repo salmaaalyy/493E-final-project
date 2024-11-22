@@ -1,0 +1,80 @@
+body {
+  font-family: 'Roboto', sans-serif;
+  font-weight: 100;
+  padding: 0 80px; /* Adds spacing on the sides */
+}
+
+nav {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+}
+
+a {
+  text-decoration: none;
+  color: black;
+}
+
+nav div {
+  display: flex;
+  gap: 50px; /* Adjust spacing between links */
+}
+
+nav h2 a {
+  text-decoration: none;
+  color: black;
+}
+
+.active-link {
+  text-decoration: underline;
+}
+
+form {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+}
+
+label {
+  font-weight: bold;
+}
+
+input[type="text"] {
+  width: 380px;
+  padding: 10px;
+  border: 2px solid black;
+  border-radius: 10px;
+  font-size: 16px;
+}
+
+#login-button {
+  width: 150px;
+  padding-top: 5px;
+  padding-bottom: 5px;
+  font-size: 24px;
+  background-color: black;
+  color: white;
+  border: 2px solid black;
+  cursor: pointer;
+  transition: background-color 0.3s ease, transform 0.2s ease;
+  align-self: center;
+}
+
+.center {
+  margin-top: 5px;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+}
+
+h1 {
+  font-size: 48px;
+}
+
+h2 {
+  font-size: 34px;
+}
+
+h3 {
+  font-size: 24px;
+}

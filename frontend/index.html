@@ -1,0 +1,44 @@
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>EasyEats</title>
+  
+  <link rel="stylesheet" href="style.css">
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Roboto:ital,wght@0,100;0,300;0,400;0,500;0,700;0,900;1,100;1,300;1,400;1,500;1,700;1,900&display=swap" rel="stylesheet">
+
+</head>
+<body>
+  <!-- Navigation -->
+  <nav>
+    <h1>EasyEats</h1>
+    <div>
+      <h2 class="active-link"><a href="index.html">Restaurants</a></h2>
+      <h2><a href="about.html">About</a></h2>
+      <h2><a href="login.html">Login</a></h2>
+    </div>
+  </nav>
+
+  <section>
+    <h2>Restaurants near University of Washington</h2>
+    <div id="restaurantList">
+      <h3 data-id="1">Restaurant 01</h3>
+      <h3 data-id="2">Restaurant 02</h3>
+      <h3 data-id="3">Restaurant 03</h3>
+      <h3 data-id="4">Restaurant 04</h3>
+      <h3 data-id="5">Restaurant 05</h3>
+      <h3 data-id="6">Restaurant 06</h3>
+    </div>
+    
+    <div id="reviewContainer">
+      <h2 id="restaurantName"></h2>
+      <div id="reviews"></div>
+    </div>
+  </section>
+
+  <script src="restaurants.js"></script>
+
+</body>
+</html>
