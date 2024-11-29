@@ -1,4 +1,5 @@
 import "./styles/App.css";
+
 import { MenuItem, TopNavigationProps } from "./components/TopNavigation";
 import TopNavigation from "./components/TopNavigation";
 import { BrowserRouter as Router, Routes, Route } from "react-router-dom";
@@ -10,11 +11,11 @@ import RestaurantsPage from "./pages/Restaurants";
 function App() {
   const menuProps: TopNavigationProps = {
     items: [
-      {
-        label: "Home",
-        key: "/",
-        element: <HomePage />,
-      },
+      // {
+      //   label: "Home",
+      //   key: "/",
+      //   element: <HomePage />,
+      // },
 			{
 				label: "Restaurants",
 				key: "/restaurants",

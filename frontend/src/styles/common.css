@@ -1,32 +1,16 @@
-body {
+/* Applies Roboto font to entire website */
+* {
   font-family: "Roboto", sans-serif;
   font-weight: 100;
-  padding: 0 80px; /* Adds spacing on the sides */
 }
 
-nav {
-  display: flex;
-  justify-content: space-between;
-  align-items: center;
+h1, h2, h3 {
+  font-weight: 500;
 }
 
 a {
   text-decoration: none;
-  color: black;
-}
-
-nav div {
-  display: flex;
-  gap: 50px; /* Adjust spacing between links */
-}
-
-nav h2 a {
-  text-decoration: none;
-  color: black;
-}
-
-.active-link {
-  text-decoration: underline;
+  /* color: black; */
 }
 
 form {
@@ -67,16 +51,4 @@ input[type="text"] {
   display: flex;
   justify-content: center;
   align-items: center;
-}
-
-h1 {
-  font-size: 48px;
-}
-
-h2 {
-  font-size: 34px;
-}
-
-h3 {
-  font-size: 24px;
 }

@@ -1,3 +1,5 @@
+import "../styles/common.css";
+
 export default function LoginPage() {
   return (
     <div>

@@ -1,3 +1,5 @@
+import "../styles/common.css";
+
 import React, { FC } from "react";
 
 import { Layout, Menu } from "antd";
@@ -34,14 +36,27 @@ export default function TopNavigation({ items }: TopNavigationProps) {
           backgroundColor: "white",
         }}
       >
-        <div className="demo-logo" style={{ color: "black", fontSize: "18px" }}>
-          EasyEats Logo
+        <div className="demo-logo" style={{ color: "black"}}>
+          <h1>EasyEats Logo</h1>
         </div>
         <Menu
           mode="horizontal"
           onClick={navigateHook}
-          items={items}
           style={{ flex: 1, justifyContent: "flex-end", margin: 0 }}
+          items={items.map((item) => ({
+            ...item,
+            label: (
+              <h2
+                style={{
+                  margin: 0,
+                  color: "black",
+                }}
+              >
+                {item.label}
+              </h2>
+            ),
+          }))}
+          className="navbar"
         />
       </Header>
     </Layout>
