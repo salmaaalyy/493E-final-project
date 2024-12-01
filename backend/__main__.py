@@ -1,4 +1,5 @@
 from flask import Flask, Response, request
+from flask_cors import CORS
 import argparse
 import json
 
@@ -14,9 +15,9 @@ from .database.users import Users, User
 from typing import Tuple, List
 
 app = Flask(__name__)
+CORS(app)
 manager = DatabaseManager()
 users = Users()
-
 
 @app.route('/heartbeat', methods=["GET"])
 def heartbeat():
