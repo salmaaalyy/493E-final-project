@@ -7,6 +7,8 @@ import AboutPage from "./pages/About";
 import LoginPage from "./pages/Login";
 import HomePage from "./pages/Home";
 import RestaurantsPage from "./pages/Restaurants";
+import RestaurantDetails from "./pages/RestaurantDetails";
+
 
 function App() {
   const menuProps: TopNavigationProps = {
@@ -45,12 +47,19 @@ function App() {
   );
 
   return (
-    <div className="App">
-      <Router>
+<Router>
+      <div className="App">
         <TopNavigation {...menuProps} />
-        {routes}
-      </Router>
-    </div>
+        <Routes>
+          <Route path="/" element={<HomePage />} />
+          {menuProps.items.map((value: MenuItem, index: number) => (
+            <Route key={index} path={value.key} element={value.element} />
+          ))}
+          {/* Dynamic route for restaurant details */}
+          <Route path="/restaurant/:name" element={<RestaurantDetails />} />
+        </Routes>
+      </div>
+    </Router>
   );
 }
 
