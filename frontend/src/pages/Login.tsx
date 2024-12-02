@@ -3,7 +3,7 @@ import "../styles/common.css";
 export default function LoginPage() {
   return (
     <div>
-      <section>
+      <section id="login">
         <h1>Login</h1>
 
         <div>

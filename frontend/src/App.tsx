@@ -8,16 +8,17 @@ import LoginPage from "./pages/Login";
 import HomePage from "./pages/Home";
 import RestaurantsPage from "./pages/Restaurants";
 import RestaurantDetails from "./pages/RestaurantDetails";
+import WriteReviewPage from "./pages/WriteReview";
 
 
 function App() {
   const menuProps: TopNavigationProps = {
     items: [
-      // {
-      //   label: "Home",
-      //   key: "/",
-      //   element: <HomePage />,
-      // },
+      {
+        label: "Home",
+        key: "/",
+        element: <HomePage />,
+      },
 			{
 				label: "Restaurants",
 				key: "/restaurants",
@@ -52,11 +53,14 @@ function App() {
         <TopNavigation {...menuProps} />
         <Routes>
           <Route path="/" element={<HomePage />} />
+          {/* Routing for navigation menu */}
           {menuProps.items.map((value: MenuItem, index: number) => (
             <Route key={index} path={value.key} element={value.element} />
           ))}
-          {/* Dynamic route for restaurant details */}
-          <Route path="/restaurant/:name" element={<RestaurantDetails />} />
+          {/* Routing for restaurant details page(s) */}
+          <Route path="/restaurants/:name" element={<RestaurantDetails />} />
+          {/* Routing for review pages */}
+          <Route path="/restaurants/:name/review" element={<WriteReviewPage />} />
         </Routes>
       </div>
     </Router>

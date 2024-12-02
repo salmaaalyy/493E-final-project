@@ -18,8 +18,9 @@ export default function Restaurants() {
       });
   }, []);
 
+  // Routes to details page of clicked restuarant
   const handleRestaurantClick = (name: string) => {
-    navigate(`/restaurant/${name}`, { state: { name } });
+    navigate(`/restaurants/${name}`, { state: { name } });
   };
 
   return (

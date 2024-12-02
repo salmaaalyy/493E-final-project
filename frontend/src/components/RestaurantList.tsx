@@ -1,6 +1,8 @@
 import React from "react";
 import { useNavigate } from "react-router-dom";
 
+// Resuable component that stores restaurant data
+
 export interface RestaurantItem {
   id: number;
   name: string;

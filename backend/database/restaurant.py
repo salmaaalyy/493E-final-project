@@ -38,7 +38,13 @@ class RestaurantInfo:
         Returns:
             RestaurantInfo: A RestaurantInfo object that corresponds to data
         """
-        return RestaurantInfo(data['summary'], data['hours'], data['address'], data['phone'])
+        # Added default values if missing
+        summary = data.get('summary', 'No summary available')
+        hours = data.get('hours', 'Unknown')
+        address = data.get('address', 'Unknown')
+        phone = data.get('phone', 'Unknown')
+        
+        return RestaurantInfo(summary, hours, address, phone)
 
 class RestaurantDatabase:
     """RestaurantDatabase is a database that represents all the accessibility information and other
@@ -91,9 +97,12 @@ class RestaurantDatabase:
         # Make the accessibility summary section
         result['accessibility_summary'] = self.reviews.get_ratings_summary()
         
-        # Make the restaurant info section
-        result['restaurant_info'] = self.restaurant_info
-        del result['restaurant_info'].summary
+        # Make the restaurant info section, without the summary
+        result['restaurant_info'] = {
+            'hours': self.restaurant_info.hours,
+            'address': self.restaurant_info.address,
+            'phone': self.restaurant_info.phone
+        }
     
         # Make the review summary section
         result['review_summary'] = self.reviews.get_summary()

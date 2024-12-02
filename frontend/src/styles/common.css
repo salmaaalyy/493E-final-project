@@ -17,7 +17,7 @@ a {
   /* color: black; */
 }
 
-form {
+form, input {
   display: flex;
   align-items: center;
   gap: 10px;
@@ -27,7 +27,7 @@ label {
   font-weight: bold;
 }
 
-input[type="text"] {
+#login input[type="text"] {
   width: 380px;
   padding: 10px;
   border: 2px solid black;
@@ -35,19 +35,21 @@ input[type="text"] {
   font-size: 16px;
 }
 
-#login-button {
-  width: 150px;
+/* Uniform styling for all buttons: Square, black background with white text */
+button {
   padding-top: 5px;
   padding-bottom: 5px;
+  margin-bottom: 10px;
   font-size: 24px;
   background-color: black;
   color: white;
   border: 2px solid black;
   cursor: pointer;
-  transition:
-    background-color 0.3s ease,
-    transform 0.2s ease;
   align-self: center;
+}
+
+#login-button {
+  width: 150px;
 }
 
 .center {
@@ -57,7 +59,40 @@ input[type="text"] {
   align-items: center;
 }
 
-/* Hover effect */
+/* Change restaurant color on hover */
 .restaurant-item:hover {
-  color: #0073e6;        /* Change text color on hover */
+  color: #0073e6;
+}
+
+section {
+  padding-bottom: 10px;
+}
+
+.box {
+  border: 2px solid black;
+  margin-bottom: 10px;
+  padding-left: 10px;
+}
+
+/* Style for the container that holds the label and input */
+.rating-container {
+  display: flex;
+  align-items: center;
+}
+
+.rating-input {
+  margin-left: 5px;
+  border: none;
+  background: none;
+  outline: none;
+  width: 50px;
+  font-size: 24px;
+  font-weight: 300;
+}
+
+#review input[type="text"] {
+  outline: none;
+  border: none;
+  max-height: 200px;
+  font-weight: 500;
 }
