@@ -1,45 +1,71 @@
-import React from 'react';
-
-// Reusable component to populate input boxes for users to leave a review
-
 interface RatingInputProps {
-    ratingCategory: string;
-    ratingValue: string | number;
-    handleInputChange: (e: React.ChangeEvent<HTMLInputElement>) => void; 
-    reviewText: string;
-    handleReviewChange: (e: React.ChangeEvent<HTMLInputElement>) => void; 
+  ratingCategory: string;
+  displayName: string; 
+  ratingValue: string | number;
+  handleInputChange: (e: React.ChangeEvent<HTMLInputElement>) => void;
+  reviewText: string;
+  handleReviewChange: (e: React.ChangeEvent<HTMLTextAreaElement>) => void;
 }
-const RatingInput : React.FC<RatingInputProps> = (
-  { ratingCategory, ratingValue, handleInputChange, reviewText, handleReviewChange }
-) => {
-  const reviewName = `${ratingCategory}Review`;  
+
+const RatingInput: React.FC<RatingInputProps> = ({
+  ratingCategory,
+  displayName,
+  ratingValue,
+  handleInputChange,
+  reviewText,
+  handleReviewChange,
+}) => {
   return (
-    <div>
-      <label htmlFor={ratingCategory} className='rating-container'>
-        <h2>{ratingCategory}: {ratingValue ? `${ratingValue}/5` : ''}</h2>
-        <input
-          type="number"
-          name={ratingCategory}
-          min="1"
-          max="5"
-          value={ratingValue}
-          onChange={handleInputChange}
-          placeholder="?/5"
-          className='rating-input'
-        />
+    <div style={{ marginBottom: "20px" }}>
+      {/* Rating Input */}
+      <label htmlFor={`${ratingCategory}-rating`} style={{ display: "block", marginBottom: "10px" }}>
+        <h2 style={{ display: "inline-block", marginRight: "10px" }}>
+          {displayName}: 
+        </h2>
+        <span style={{ display: "inline-flex", alignItems: "center" }}>
+          <input
+            id={`${ratingCategory}-rating`}
+            type="number"
+            name={ratingCategory}
+            value={ratingValue}
+            onChange={handleInputChange}
+            placeholder="?"
+            min="1"
+            max="5"
+            style={{
+              width: "50px",
+              padding: "5px",
+              textAlign: "center",
+              fontSize: "14px",
+              marginRight: "5px",
+              borderRadius: "3px",
+              border: "1px solid black",
+            }}
+          />
+          /5
+        </span>
       </label>
 
-      <div className="box">
-        <form id={`${ratingCategory}Form`}>
-          <input
-            type="text"
-            name={reviewName}
-            value={reviewText}
-            onChange={handleReviewChange}
-            placeholder={`Share details of your own experience at this place for ${ratingCategory}`}
-          />
-        </form>
-      </div>
+      {/* Review Textarea */}
+      <label htmlFor={`${ratingCategory}-review`} style={{ display: "block", marginBottom: "5px" }}>
+      
+      </label>
+      <textarea
+        id={`${ratingCategory}-review`}
+        name={ratingCategory} 
+        value={reviewText}
+        onChange={handleReviewChange}
+        placeholder={`Share details of your experience for at this place`}
+        style={{
+          width: "100%",
+          height: "150px",
+          padding: "10px",
+          fontSize: "16px",
+          border: "2px solid black",
+          borderRadius: "3px",
+          boxSizing: "border-box",
+        }}
+      />
     </div>
   );
 };
