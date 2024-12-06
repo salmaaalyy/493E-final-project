@@ -13,6 +13,7 @@ import { useState } from "react";
 
 
 function App() {
+  let [userName, setUserName] = useState(undefined);
   let [userToken, setUserToken] = useState(-1);
 
   const menuProps: TopNavigationProps = {
@@ -33,9 +34,9 @@ function App() {
         element: <AboutPage />,
       },
       {
-        label: "Login",
+        label: userName === undefined ? "Login" : `Welcome ${userName}!`,
         key: "/login",
-        element: <LoginPage setUserToken={setUserToken}/>,
+        element: <LoginPage setUserName={setUserName} setUserToken={setUserToken}/>,
       },
     ],
   };

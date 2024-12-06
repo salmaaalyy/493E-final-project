@@ -4,8 +4,8 @@ import "../styles/common.css";
 import { useNavigate } from "react-router-dom";
 import { HOST, PORT } from "../constants/BackendConstants";
 
-export default function LoginPage({ setUserToken } : any) {
-  const [email, setEmail] = useState(""); 
+export default function LoginPage({ setUserName, setUserToken } : any) {
+  const [user, setUser] = useState(""); 
   const [password, setPassword] = useState(""); 
   const [errorMessage, setErrorMessage] = useState("");
   const navigator = useNavigate();
@@ -13,17 +13,18 @@ export default function LoginPage({ setUserToken } : any) {
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault(); 
     setErrorMessage(""); 
-
+  
     try {
       
       const response = await axios.post(`http://${HOST}:${PORT}/login`, {
-        name: email,
+        name: user,
         password,
       });
 
       if (response.status === 200) {
         const token = response.data; 
         setUserToken(token); 
+        setUserName(user);
 
         // Redirect to the previous page when successfully logged in
         navigator(-1);
@@ -50,19 +51,19 @@ export default function LoginPage({ setUserToken } : any) {
         {/* Login Title */}
         <h1 style={{ fontSize: "3rem" }}>Login</h1>
 
-        {/* Email Input */}
+        {/* User Input */}
         <div>
           <form id="userForm" onSubmit={handleSubmit}>
-            <label htmlFor="emailInput">
-              <h2>Email: </h2>
+            <label htmlFor="userInput">
+              <h2>User Name: </h2>
             </label>
             <input
               type="text"
-              id="emailInput"
-              name="emailInput"
-              value={email}
-              onChange={(e) => setEmail(e.target.value)} 
-              placeholder="Enter your email"
+              id="userInput"
+              name="userInput"
+              value={user}
+              onChange={(e) => setUser(e.target.value)} 
+              placeholder="Enter your user name"
               required
             />
           </form>
@@ -70,7 +71,7 @@ export default function LoginPage({ setUserToken } : any) {
 
         {/* Password Input */}
         <div>
-          <form id="userForm">
+          <form id="userForm" onSubmit={handleSubmit}>
             <label htmlFor="passwordInput">
               <h2>Password:</h2>
             </label>
