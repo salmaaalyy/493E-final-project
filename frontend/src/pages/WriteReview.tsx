@@ -1,5 +1,7 @@
-import React, { useState, useCallback } from "react";
+import React, { useState, useEffect } from "react";
 import RatingInput from "../components/ReviewInput";
+import { useNavigate, useParams } from "react-router-dom";
+import { HOST, PORT } from "../constants/BackendConstants";
 
 type ReviewCategory =
   | "overall"
@@ -12,13 +14,12 @@ type ReviewCategory =
   | "staffDecorum";
 
 interface Review {
-  user: string;
-  restaurant: string;
+  token: string;
   review: string;
   ratings: Record<ReviewCategory, number>;
 }
 
-export default function WriteReview() {
+export default function WriteReview({ userToken } : any) {
   const [ratings, setRatings] = useState<Record<ReviewCategory, string>>({
     overall: "",
     ramp: "",
@@ -41,10 +42,9 @@ export default function WriteReview() {
     staffDecorum: "",
   });
 
-  const [restaurantName, setRestaurantName] = useState("");
-  const [userName, setUserName] = useState(""); 
+  const navigator = useNavigate();
+  const { name } = useParams();
   const [errorMessage, setErrorMessage] = useState("");
-  const [allReviews, setAllReviews] = useState<Review[]>([]); 
 
   const categories: { display: string; key: ReviewCategory }[] = [
     { display: "Overall Accessibility", key: "overall" },
@@ -57,50 +57,51 @@ export default function WriteReview() {
     { display: "Staff Decorum", key: "staffDecorum" },
   ];
 
-  const handleInputChange = useCallback(
-    (e: React.ChangeEvent<HTMLInputElement>) => {
-      const { name, value } = e.target;
-      setRatings((prevRatings) => ({
-        ...prevRatings,
-        [name as ReviewCategory]: value,
-      }));
-    },
-    []
-  );
+  const getUserData = useEffect(() => {
+    if(userToken < 0) {
+      navigator("/login");
+    }
+  },
+  [userToken]);
 
-  const handleReviewChange = useCallback(
-    (e: React.ChangeEvent<HTMLTextAreaElement>) => {
-      const { name, value } = e.target;
-      setReviews((prevReviews) => ({
-        ...prevReviews,
-        [name as ReviewCategory]: value,
-      }));
-    },
-    []
-  );
+  const handleInputChange = (e: React.ChangeEvent<HTMLInputElement>) => {
+    const { name, value } = e.target;
+    setRatings((prevRatings) => ({
+      ...prevRatings,
+      [name as ReviewCategory]: value,
+    }));
+  }
+
+  const handleReviewChange = (e: React.ChangeEvent<HTMLTextAreaElement>) => {
+    const { name, value } = e.target;
+    setReviews((prevReviews) => ({
+      ...prevReviews,
+      [name as ReviewCategory]: value,
+    }))
+  };
+  
 
   const handleSubmit = () => {
-    if (!restaurantName || !userName) {
-      setErrorMessage("Please enter a restaurant name and your name.");
-      return;
-    }
-
+    console.log("Submitting new Review");
     const newReview: Review = {
-      user: userName || "Anonymous",
-      restaurant: restaurantName,
+      token: userToken,
       review: Object.values(reviews).join(" "),
       ratings: Object.fromEntries(
-        Object.entries(ratings).map(([key, value]) => [key, value === "" ? -1 : Number(value)])
+        Object.entries(ratings).map(([key, value]) => [key.toUpperCase(), value === "" ? -1 : Number(value)])
       ) as Record<ReviewCategory, number>,
     };
-
-    setAllReviews((prevReviews) => [...prevReviews, newReview]);
+    console.log(`Submitting the Review: ${JSON.stringify(newReview)}`);
+    fetch(`http://${HOST}:${PORT}/add_review?restaurant=${name}`, {
+      method: 'POST',
+      body: JSON.stringify(newReview),
+      headers: {
+          'Content-type': 'application/json; charset=UTF-8'
+      }
+    });
     setErrorMessage("");
     alert("Review submitted successfully!");
 
     // Clear the form
-    setUserName("");
-    setRestaurantName("");
     setRatings({
       overall: "",
       ramp: "",
@@ -121,7 +122,14 @@ export default function WriteReview() {
       food: "",
       staffDecorum: "",
     });
+
+    navigator(-1);
   };
+
+  if(userToken < 0) {
+    navigator("/login");
+    return (<div></div>);
+  }
 
   return (
     <div style={{ padding: "20px" }}>
@@ -129,44 +137,12 @@ export default function WriteReview() {
 
       {/*  Name Input */}
       <div style={{ marginBottom: "20px" }}>
-        <label htmlFor="userNameInput">
-          <strong>Your Name:</strong>
-        </label>
-        <input
-          type="text"
-          id="userNameInput"
-          value={userName}
-          onChange={(e) => setUserName(e.target.value)}
-          placeholder="Enter your name"
-          style={{
-            width: "100%",
-            padding: "10px",
-            marginTop: "5px",
-            borderRadius: "5px",
-            border: "1px solid #ccc",
-          }}
-        />
+        {/* Here goes the user name */}
       </div>
 
       
       <div style={{ marginBottom: "20px" }}>
-        <label htmlFor="restaurantInput">
-          <strong>Restaurant Name:</strong>
-        </label>
-        <input
-          type="text"
-          id="restaurantInput"
-          value={restaurantName}
-          onChange={(e) => setRestaurantName(e.target.value)}
-          placeholder="Enter the restaurant name"
-          style={{
-            width: "100%",
-            padding: "10px",
-            marginTop: "5px",
-            borderRadius: "5px",
-            border: "1px solid #ccc",
-          }}
-        />
+        {/** Here goes the restaurant name */}
       </div>
 
       
@@ -190,35 +166,6 @@ export default function WriteReview() {
 
       
       {errorMessage && <p style={{ color: "red", marginTop: "10px" }}>{errorMessage}</p>}
-
-      {/* Community Reviews  */}
-      <div style={{ marginTop: "30px" }}>
-        <h2>Community Reviews</h2>
-        {allReviews.length === 0 ? (
-          <p>No reviews yet. Be the first to review!</p>
-        ) : (
-          allReviews.map((review, index) => (
-            <div key={index} style={{ borderBottom: "1px solid #ccc", marginBottom: "20px" }}>
-              <p>
-                <strong>User:</strong> {review.user}
-              </p>
-              <p>
-                <strong>Restaurant:</strong> {review.restaurant}
-              </p>
-              <p>
-                <strong>Review:</strong> {review.review}
-              </p>
-              <ul>
-                {categories.map(({ display, key }) => (
-                  <li key={key}>
-                    {display}: {review.ratings[key] !== -1 ? review.ratings[key] : "N/A"}
-                  </li>
-                ))}
-              </ul>
-            </div>
-          ))
-        )}
-      </div>
     </div>
   );
 }

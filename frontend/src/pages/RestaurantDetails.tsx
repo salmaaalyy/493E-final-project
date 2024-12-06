@@ -1,11 +1,10 @@
 import {useState, useEffect } from "react";
-import { useNavigate, useLocation } from "react-router-dom";
+import { useNavigate, useParams } from "react-router-dom";
 import axios from "axios";
+import { HOST, PORT } from "../constants/BackendConstants";
 
 export default function RestaurantDetails() {
-  const location = useLocation();
-  const { name } = location.state || {};
-  const stateName = location.state?.name || name;
+  let { name } = useParams();
 
   const navigate = useNavigate();
 
@@ -47,19 +46,19 @@ export default function RestaurantDetails() {
     // Encode restaurant name to match URL standards
     //   Sidenote: call to backend does not work with '%20' replacing spaces so normal
     //     call to 'encodeURIComponent' doesn't work
-    const encodedName = encodeURIComponent(stateName).replace(/%20/g, '+');
+    const encodedName = encodeURIComponent(name || "").replace(/%20/g, '+');
     
     // Fetch restaurant data from Flask API when the component loads
-    axios.get(`http://localhost:3500/get_data?restaurant=${encodedName}`)
-      .then((response) => {
+    axios.get(`http://${HOST}:${PORT}/get_data?restaurant=${encodedName}`)
+      .then((response : any) => {
         setRestaurantData(response.data);
         setLoading(false);
       })
-      .catch((error) => {
+      .catch((error : any) => {
         console.error("Error fetching restaurant data:", error);
         setLoading(false);
       });
-  }, [stateName]); // Re-fetch if the name changes
+  }, [name]); // Re-fetch if the name changes
 
   // Shows loading message while data is being fetched
   if (loading) {
@@ -75,7 +74,7 @@ export default function RestaurantDetails() {
 
   return (
     <div>
-      <h1>{stateName || "Restaurant Name"}</h1>
+      <h1>{name || "Restaurant Name"}</h1>
       
       {/* Note: Not sure if the average rating is already built in the  API calls*/}
       <h2>Rating: {accessibility_summary?.average_rating/5 || "No rating available"}</h2> 
@@ -88,9 +87,9 @@ export default function RestaurantDetails() {
         <li>Overview</li>
         <li><a href="#accessibility-summary">Accessibility Summary</a></li>
         <li><a href="#restaurant-summary">Restaurant Summary</a></li>
-        <li><a href="#ask-the-community">Ask the Community</a></li>
+        {/* <li><a href="#ask-the-community">Ask the Community</a></li> */}
         <li><a href="#review-summaries">Review Summaries</a></li>
-        <li><a href="#reviews-in-detail">Reviews in Detail</a></li>
+        {/* <li><a href="#reviews-in-detail">Reviews in Detail</a></li> */}
       </ul>
 
       <p>{summary}</p>

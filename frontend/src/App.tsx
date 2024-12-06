@@ -9,9 +9,12 @@ import HomePage from "./pages/Home";
 import RestaurantsPage from "./pages/Restaurants";
 import RestaurantDetails from "./pages/RestaurantDetails";
 import WriteReviewPage from "./pages/WriteReview";
+import { useState } from "react";
 
 
 function App() {
+  let [userToken, setUserToken] = useState(-1);
+
   const menuProps: TopNavigationProps = {
     items: [
       {
@@ -32,7 +35,7 @@ function App() {
       {
         label: "Login",
         key: "/login",
-        element: <LoginPage />,
+        element: <LoginPage setUserToken={setUserToken}/>,
       },
     ],
   };
@@ -60,7 +63,7 @@ function App() {
           {/* Routing for restaurant details page(s) */}
           <Route path="/restaurants/:name" element={<RestaurantDetails />} />
           {/* Routing for review pages */}
-          <Route path="/restaurants/:name/review" element={<WriteReviewPage />} />
+          <Route path="/restaurants/:name/review" element={<WriteReviewPage userToken={userToken}/>} />
         </Routes>
       </div>
     </Router>

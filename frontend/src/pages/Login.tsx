@@ -1,11 +1,14 @@
 import { useState } from "react";
 import axios from "axios";
 import "../styles/common.css";
+import { useNavigate } from "react-router-dom";
+import { HOST, PORT } from "../constants/BackendConstants";
 
-export default function LoginPage() {
+export default function LoginPage({ setUserToken } : any) {
   const [email, setEmail] = useState(""); 
   const [password, setPassword] = useState(""); 
   const [errorMessage, setErrorMessage] = useState("");
+  const navigator = useNavigate();
 
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault(); 
@@ -13,17 +16,17 @@ export default function LoginPage() {
 
     try {
       
-      const response = await axios.post("http://localhost:3500/login", {
+      const response = await axios.post(`http://${HOST}:${PORT}/login`, {
         name: email,
         password,
       });
 
       if (response.status === 200) {
         const token = response.data; 
-        localStorage.setItem("authToken", token); 
+        setUserToken(token); 
 
-        // Redirect to the restaurants page when successfully logged in
-        window.location.href = "/restaurants";
+        // Redirect to the previous page when successfully logged in
+        navigator(-1);
       }
     } catch (error) {
      

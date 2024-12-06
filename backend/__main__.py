@@ -70,12 +70,12 @@ def register_user() -> int:
     # Attempt to Register User
     user = User(name, password)
     if not users.add_user(user):
-        return f"User not registered, name {name} already exists", HTTP_CODE.BAD_REQUEST
+        return f"User not registered, name {name} already exists", HTTP_CODE.BAD_REQUEST.value
     
     # Attempt to login
     token = users.login(user)
     if not token:
-        return "[System Bug] Something has gone wrong on our end!", HTTP_CODE.SERVER_BAD
+        return "[System Bug] Something has gone wrong on our end!", HTTP_CODE.SERVER_BAD.value
     
     # Return login token
     return json.dumps(token, cls=JSONEncoder)
@@ -104,8 +104,8 @@ def login() -> int:
     token = users.login(user)
     if not token:
         if users.contains_name(user.name):
-            return f"Incorrect password for user {user.name}", HTTP_CODE.UNAUTHORIZED
-        return "This user does not exist", HTTP_CODE.BAD_REQUEST
+            return f"Incorrect password for user {user.name}", HTTP_CODE.UNAUTHORIZED.value
+        return "This user does not exist", HTTP_CODE.BAD_REQUEST.value
     
     # Return login token
     return json.dumps(token, cls=JSONEncoder)
@@ -127,7 +127,7 @@ def logout() -> str:
     # Attempt to login
     success = users.logout(token)
     if not success:
-        return "This user was not logged in, or doesn't exist", HTTP_CODE.BAD_REQUEST
+        return "This user was not logged in, or doesn't exist", HTTP_CODE.BAD_REQUEST.value
     
     # Return success
     return Response(status=200)
@@ -174,7 +174,7 @@ def get_data() -> RestaurantDatabase:
     restaurant_data = manager.get_restaurant(restaurant)
     
     if not restaurant:
-        return "This restaurant doesn't exist", HTTP_CODE.NOT_FOUND
+        return "This restaurant doesn't exist", HTTP_CODE.NOT_FOUND.value
     
     # Return the restaurant data
     return json.dumps(restaurant_data.to_webpage_format(), cls=JSONEncoder)
@@ -208,14 +208,14 @@ def add_review() -> RestaurantDatabase:
     del data['token']
     user = users.validate_user(token)
     if not user:
-        return "The token provided is invalid for any user", HTTP_CODE.UNAUTHORIZED
+        return "The token provided is invalid for any user", HTTP_CODE.UNAUTHORIZED.value
     data['user'] = user.name
     review = Review.from_dict(data)
     
     # Now, get the restaurant database
     restaurant_data = manager.get_restaurant(restaurant)
     if not restaurant_data:
-        return "The restaurant provided is not a valid one", HTTP_CODE.NOT_FOUND
+        return "The restaurant provided is not a valid one", HTTP_CODE.NOT_FOUND.value
     
     # Add the review
     restaurant_data.add_review(review)
@@ -248,7 +248,7 @@ def filter_reviews() -> List[Review]:
     # Get the restaurant database
     restaurant_data = manager.get_restaurant(restaurant)
     if not restaurant_data:
-        return "The restaurant provided is not a valid one", HTTP_CODE.NOT_FOUND
+        return "The restaurant provided is not a valid one", HTTP_CODE.NOT_FOUND.value
 
     return json.dumps(restaurant_data.reviews.filter(*filters), cls=JSONEncoder)    
 
