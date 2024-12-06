@@ -82,7 +82,6 @@ export default function WriteReview({ userToken } : any) {
   
 
   const handleSubmit = () => {
-    console.log("Submitting new Review");
     const newReview: Review = {
       token: userToken,
       review: Object.values(reviews).join(" "),
@@ -90,7 +89,7 @@ export default function WriteReview({ userToken } : any) {
         Object.entries(ratings).map(([key, value]) => [key.toUpperCase(), value === "" ? -1 : Number(value)])
       ) as Record<ReviewCategory, number>,
     };
-    console.log(`Submitting the Review: ${JSON.stringify(newReview)}`);
+
     fetch(`http://${HOST}:${PORT}/add_review?restaurant=${name}`, {
       method: 'POST',
       body: JSON.stringify(newReview),
@@ -123,7 +122,7 @@ export default function WriteReview({ userToken } : any) {
       staffDecorum: "",
     });
 
-    navigator(-1);
+    navigator(`/restaurants/${name}`);
   };
 
   if(userToken < 0) {
