@@ -9,7 +9,7 @@ to = "/App.tsx"
 status = 200
 
 [functions]
-  directory "backend/"
+  directory = "backend/"
 
 [dev]
   command = "python -m backend"
