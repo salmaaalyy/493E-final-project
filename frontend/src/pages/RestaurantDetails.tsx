@@ -107,13 +107,11 @@ export default function RestaurantDetails() {
       {/* Restaurant Summary */}
       <section id="restaurant-summary">
         <h2>Restaurant Summary</h2>
-        <h3>Price Range: </h3>
         {Object.keys(restaurant_info).map((category) => {
           return (
             <h3>{formatCategory(category)}: {restaurant_info[category]}</h3>
           );
         })}
-        <h3>Menu: </h3>
       </section>
 
       {/* Review Summaries */}

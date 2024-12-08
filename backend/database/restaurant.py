@@ -8,7 +8,7 @@ class RestaurantInfo:
     """Restaurant Info is a class that represents the
     basic information of a restaurant
     """
-    def __init__(self, summary : str, hours : str, address : str, phone : str):
+    def __init__(self, summary : str, hours : str, address : str, phone : str, menu : str, price_range: str):
         """Creates a RestaurantInfo class based on its basic information
 
         Args:
@@ -16,11 +16,15 @@ class RestaurantInfo:
             hours (str): The hours it is open
             address (str): The address of the restaurant
             phone (str): The phone number for the restaurant
+            menu (str): The web address for the restaurant's menu
+            price_range (str): The dollar price range for restaurant's items
         """
         self.summary = summary
         self.hours = hours
         self.address = address
         self.phone = phone
+        self.menu = menu
+        self.price_range = price_range
     
     @staticmethod
     def from_dict(data : Dict[str, str]):
@@ -33,7 +37,9 @@ class RestaurantInfo:
                 summary : The summary,
                 hours : The hours it is open,
                 address : The address of the restaurant,
-                phone : The restaurant's phone number
+                phone : The restaurant's phone number,
+                menu : The restaurant's menu web address,
+                price_range : Dollar price range for items
 
         Returns:
             RestaurantInfo: A RestaurantInfo object that corresponds to data
@@ -43,8 +49,9 @@ class RestaurantInfo:
         hours = data.get('hours', 'Unknown')
         address = data.get('address', 'Unknown')
         phone = data.get('phone', 'Unknown')
-        
-        return RestaurantInfo(summary, hours, address, phone)
+        menu = data.get('menu', 'Unknown')
+        price_range = data.get('price_range', 'Unknown')
+        return RestaurantInfo(summary, hours, address, phone, menu, price_range)
 
 class RestaurantDatabase:
     """RestaurantDatabase is a database that represents all the accessibility information and other
@@ -101,7 +108,9 @@ class RestaurantDatabase:
         result['restaurant_info'] = {
             'hours': self.restaurant_info.hours,
             'address': self.restaurant_info.address,
-            'phone': self.restaurant_info.phone
+            'phone': self.restaurant_info.phone,
+            'menu': self.restaurant_info.menu,
+            'price_range': self.restaurant_info.price_range
         }
     
         # Make the review summary section
