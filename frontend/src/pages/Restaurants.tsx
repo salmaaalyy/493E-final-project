@@ -1,6 +1,5 @@
 import React, { useEffect, useState } from "react";
 import { useNavigate } from "react-router-dom";
-import axios from "axios";
 import { HOST, PORT } from "../constants/BackendConstants";
 
 export default function Restaurants() {
@@ -9,12 +8,17 @@ export default function Restaurants() {
 
   useEffect(() => {
     // Update with whatever server is running backend
-    // Command to run server: python -m backend --port=3500
-    axios.get(`http://${HOST}:${PORT}/search`)
-      .then((response : any) => {
-        setRestaurants(response.data);
+    fetch(`http://${HOST}:${PORT}/search`)
+      .then((response) => {
+        if (!response.ok) {
+          throw new Error('Network response was not ok');
+        }
+        return response.json();
       })
-      .catch((error : any) => {
+      .then((data) => {
+        setRestaurants(data);
+      })
+      .catch((error) => {
         console.error("Error fetching restaurants:", error);
       });
   }, []);

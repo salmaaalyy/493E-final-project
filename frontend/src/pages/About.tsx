@@ -41,14 +41,14 @@ export default function AboutPage() {
         </div>
         <div className="team-member">
           <h2>Tri V Nguyen</h2>
-          <p>Intro, background</p>
+          <p>Tri is a student at the University of Washington.</p>
           <a href="#" className="linkedin-link">
             LinkedIn
           </a>
         </div>
         <div className="team-member">
           <h2>Carla Acosta</h2>
-          <p>Intro, background</p>
+          <p>Carla is a student at the University of Washington.</p>
           <a href="#" className="linkedin-link">
             LinkedIn
           </a>

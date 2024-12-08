@@ -37,7 +37,7 @@ export default function TopNavigation({ items }: TopNavigationProps) {
         }}
       >
         <div className="demo-logo" style={{ color: "black"}}>
-          <h1>EasyEats Logo</h1>
+          <h1>EasyEats</h1>
         </div>
         <Menu
           mode="horizontal"

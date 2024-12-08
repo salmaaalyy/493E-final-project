@@ -1,6 +1,5 @@
 import {useState, useEffect } from "react";
 import { useNavigate, useParams } from "react-router-dom";
-import axios from "axios";
 import { HOST, PORT } from "../constants/BackendConstants";
 
 export default function RestaurantDetails() {
@@ -49,16 +48,22 @@ export default function RestaurantDetails() {
     const encodedName = encodeURIComponent(name || "").replace(/%20/g, '+');
     
     // Fetch restaurant data from Flask API when the component loads
-    axios.get(`http://${HOST}:${PORT}/get_data?restaurant=${encodedName}`)
-      .then((response : any) => {
-        setRestaurantData(response.data);
+    fetch(`http://${HOST}:${PORT}/get_data?restaurant=${encodedName}`)
+      .then((response) => {
+        if (!response.ok) {
+          throw new Error('Network response was not ok');
+        }
+        return response.json(); // Parse JSON response
+      })
+      .then((data) => {
+        setRestaurantData(data);
         setLoading(false);
       })
-      .catch((error : any) => {
+      .catch((error) => {
         console.error("Error fetching restaurant data:", error);
         setLoading(false);
       });
-  }, [name]); // Re-fetch if the name changes
+    }, [name]); // Re-fetch if the name changes
 
   // Shows loading message while data is being fetched
   if (loading) {
@@ -77,10 +82,9 @@ export default function RestaurantDetails() {
       <h1>{name || "Restaurant Name"}</h1>
       
       {/* Note: Not sure if the average rating is already built in the  API calls*/}
-      <h2>Rating: {accessibility_summary?.average_rating/5 || "No rating available"}</h2> 
-
+      <h2> Rating: {accessibility_summary?.average_rating ? `${accessibility_summary.average_rating}/5` : "No rating available"}</h2>
       <p>(# of ratings: {reviews.length})</p>
-      <h2>type of food</h2>
+      {/* <h2>type of food</h2> */}
 
       {/* Table of Content */}
       <ul>
@@ -88,8 +92,8 @@ export default function RestaurantDetails() {
         <li><a href="#accessibility-summary">Accessibility Summary</a></li>
         <li><a href="#restaurant-summary">Restaurant Summary</a></li>
         {/* <li><a href="#ask-the-community">Ask the Community</a></li> */}
-        <li><a href="#review-summaries">Review Summaries</a></li>
-        {/* <li><a href="#reviews-in-detail">Reviews in Detail</a></li> */}
+        {/* <li><a href="#review-summaries">Review Summaries</a></li> */}
+        <li><a href="#reviews-in-detail">Reviews</a></li>
       </ul>
 
       <p>{summary}</p>
@@ -97,17 +101,26 @@ export default function RestaurantDetails() {
       {/* Accessibility Summary */}
       <section id="accessibility-summary">
         <h2>Accessibility Summary</h2>
-        {Object.keys(accessibility_summary).map((category) => {
-          return (
-            <h3>{formatCategory(category)}: {accessibility_summary[category]}/5</h3>
-          );
-        })}
+        {Object.keys(accessibility_summary).length > 0 ? (
+          Object.keys(accessibility_summary).map((category) => (
+            <h3 key={category}>
+              {formatCategory(category)}: {accessibility_summary[category]}/5
+            </h3>
+          ))
+        ) : (
+          <h3>No accessibility data available.</h3>
+        )}
       </section>
 
       {/* Restaurant Summary */}
       <section id="restaurant-summary">
         <h2>Restaurant Summary</h2>
         {Object.keys(restaurant_info).map((category) => {
+          if (category == "menu") {
+            return (
+              <h3>{formatCategory(category)}: <a href={restaurant_info[category]}>link</a></h3>
+            )
+          }
           return (
             <h3>{formatCategory(category)}: {restaurant_info[category]}</h3>
           );
@@ -115,10 +128,10 @@ export default function RestaurantDetails() {
       </section>
 
       {/* Review Summaries */}
-      <section id="review-summaries">
+      {/* <section id="review-summaries">
         <h2>Review Summary</h2>
         <p>"{review_summary || "quotes placeholder Torem ipsum dolor sit amet, consectetur adipiscing elit."}"</p>
-      </section>
+      </section> */}
 
       {/* Reviews */}
       <section id="reviews">
