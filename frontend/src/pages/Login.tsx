@@ -1,5 +1,4 @@
 import { useState } from "react";
-import axios from "axios";
 import "../styles/common.css";
 import { useNavigate } from "react-router-dom";
 import { HOST, PORT } from "../constants/BackendConstants";
@@ -15,33 +14,33 @@ export default function LoginPage({ setUserName, setUserToken } : any) {
     setErrorMessage(""); 
   
     try {
-      
-      const response = await axios.post(`http://${HOST}:${PORT}/login`, {
-        name: user,
-        password,
+      const response = await fetch(`http://${HOST}:${PORT}/login`, {
+        method: 'POST',
+        headers: {
+          'Content-Type': 'application/json',
+        },
+        body: JSON.stringify({
+          name: user,
+          password,
+        }),
       });
 
-      if (response.status === 200) {
-        const token = response.data; 
-        setUserToken(token); 
+      if (response.ok) { // checks for status 200-299
+        const token = await response.json(); // assuming the token is in JSON format
+        setUserToken(token);
         setUserName(user);
-
+    
         // Redirect to the previous page when successfully logged in
         navigator(-1);
+      } else if (response.status === 401) {
+        setErrorMessage("Incorrect password. Please try again.");
+      } else if (response.status === 400) {
+        setErrorMessage("User does not exist. Please register.");
+      } else {
+        setErrorMessage("An unexpected error occurred. Please try again.");
       }
     } catch (error) {
-     
-      if (axios.isAxiosError(error) && error.response) {
-        if (error.response.status === 401) {
-          setErrorMessage("Incorrect password. Please try again.");
-        } else if (error.response.status === 400) {
-          setErrorMessage("User does not exist. Please register.");
-        } else {
-          setErrorMessage("An unexpected error occurred. Please try again.");
-        }
-      } else {
-        setErrorMessage("Unable to connect to the server. Please try again later.");
-      }
+      setErrorMessage("Unable to connect to the server. Please try again later.");
     }
   };
 

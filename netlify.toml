@@ -8,9 +8,6 @@ from = "/*"
 to = "/App.tsx"
 status = 200
 
-[functions]
-  directory = "backend"
-
 [dev]
   command = "python -m backend"
   port = 8888
