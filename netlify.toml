@@ -1,6 +1,6 @@
 [build]
-  base = "frontend/"
-  publish = "frontend/"
+  base = "frontend"
+  publish = "build"
   command = "npm run build"
 
 [[redirects]]
@@ -9,7 +9,7 @@ to = "/App.tsx"
 status = 200
 
 [functions]
-  directory = "backend/"
+  directory = "backend"
 
 [dev]
   command = "python -m backend"
