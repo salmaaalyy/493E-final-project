@@ -1,4 +1,4 @@
-import React, { useState, useEffect } from "react";
+import React, { useState } from "react";
 import RatingInput from "../components/ReviewInput";
 import { useNavigate, useParams } from "react-router-dom";
 import { HOST, PORT } from "../constants/BackendConstants";
@@ -57,12 +57,12 @@ export default function WriteReview({ userToken } : any) {
     { display: "Staff Decorum", key: "staffDecorum" },
   ];
 
-  const getUserData = useEffect(() => {
-    if(userToken < 0) {
-      navigator("/login");
-    }
-  },
-  [userToken]);
+  // const getUserData = useEffect(() => {
+  //   if(userToken < 0) {
+  //     navigator("/login");
+  //   }
+  // },
+  // [userToken]);
 
   const handleInputChange = (e: React.ChangeEvent<HTMLInputElement>) => {
     const { name, value } = e.target;

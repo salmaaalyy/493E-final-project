@@ -28,7 +28,7 @@ export default function AboutPage() {
             Xinyi Zhao is an interaction designer, currently studying Human
             Computer Interaction at the University of Washington.
           </p>
-          <a href="#" className="linkedin-link">
+          <a href="https://www.linkedin.com" className="linkedin-link">
             LinkedIn
           </a>
         </div>
@@ -42,14 +42,14 @@ export default function AboutPage() {
         <div className="team-member">
           <h2>Tri V Nguyen</h2>
           <p>Tri is a student at the University of Washington.</p>
-          <a href="#" className="linkedin-link">
+          <a href="https://www.linkedin.com" className="linkedin-link">
             LinkedIn
           </a>
         </div>
         <div className="team-member">
           <h2>Carla Acosta</h2>
           <p>Carla is a student at the University of Washington.</p>
-          <a href="#" className="linkedin-link">
+          <a href="https://www.linkedin.com" className="linkedin-link">
             LinkedIn
           </a>
         </div>

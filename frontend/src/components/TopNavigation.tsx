@@ -1,6 +1,6 @@
 import "../styles/common.css";
 
-import React, { FC } from "react";
+import React from "react";
 
 import { Layout, Menu } from "antd";
 import { useNavigate } from "react-router-dom";

@@ -41,18 +41,8 @@ function App() {
     ],
   };
 
-  const routes = (
-    <Routes>
-      {menuProps.items.map((value: MenuItem, index: number): any => {
-        return (
-          <Route key={index} path={value?.key} element={value?.element}></Route>
-        );
-      })}
-    </Routes>
-  );
-
   return (
-<Router>
+    <Router>
       <div className="App">
         <TopNavigation {...menuProps} />
         <Routes>

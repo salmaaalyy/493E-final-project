@@ -75,7 +75,7 @@ export default function RestaurantDetails() {
     return <div>Restaurant not found.</div>;
   }
 
-  const { summary, restaurant_info, accessibility_summary, review_summary, reviews } = restaurantData;
+  const { summary, restaurant_info, accessibility_summary, reviews } = restaurantData;
 
   return (
     <div>
@@ -116,7 +116,7 @@ export default function RestaurantDetails() {
       <section id="restaurant-summary">
         <h2>Restaurant Summary</h2>
         {Object.keys(restaurant_info).map((category) => {
-          if (category == "menu") {
+          if (category === "menu") {
             return (
               <h3>{formatCategory(category)}: <a href={restaurant_info[category]}>link</a></h3>
             )
