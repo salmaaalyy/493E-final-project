@@ -12,7 +12,7 @@ From the root of this project, run `python -m backend`. Its optional argument ar
 # Notes
 
 ## Endpoint Notes
-To access the data provided by HTTP requests, please look through the code to figure out the form of the data (or simply print it out to the console by using `.then(console.log)`). In general, if a class is being serialized, then it will become a dictionary/map with all its field names as the keys and its values as the entries.
+To access the data provided by HTTP requests, please look through each function in [__main__.py](https://github.com/salmaaalyy/493E-final-project/blob/main/backend/__main__.py) annotated with `@app.route(...)` to figure out the form of the data (or simply print it out to the console by using `.then(console.log)`). In general, if a class is being serialized, then it will become a dictionary/map with all its field names as the keys and its values as the entries.
 
 Thus, pay attention to the structure of all classes, whose fields are found in their `__init__` method (unlike in Java, a class's fields are declared and instantiated within its constructor). Also take note of the [`common/review_categories.py`](common/review_categories.py), as that is the name of the categories used within communication to the backend.
 
