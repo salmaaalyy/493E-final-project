@@ -84,9 +84,34 @@
   <ol>
     <li>Ideation: We spent a few days brainstorming various ideas for our final project. We decided on EasyEats because we all felt like it was an important problem to address and could execute within the timeframe we had.</li>
     <li>Assign roles: We split up into design, backend, and frontend roles to utilize our specific skills and experience.</li>
-    <li>Design: Xinyi designed the website wireframe in Figma.</li>
+    <li>Design: Xinyi designed the website wireframe in Figma.
+      <ul>
+        <li>High Contrast with Black and White Theme: 
+          Using a black-and-white color scheme ensures maximum contrast, making the content easily readable for users with low vision or color blindness. This approach meets Web Content Accessibility Guidelines (WCAG) requirements for text and background contrast.</li>
+        <li>Clear Text Hierarchy: 
+          Using distinct text sizes to establish a clear visual hierarchy. For example, the header 1 is 60 pt, header 2 is 48 pt, and body content is 24 pt. Also, the call to Action or the buttons are white text on black box to distinguish actionable items. </li>
+        <li>Text-only Content: 
+          To ensure all users experience the same information, represent all content in text rather than relying on images. This eliminates discrepancies between visual and alternative text descriptions, creating an equitable experience for users with screen readers.</li>
+        <li>Intuitive Navigation: 
+          Ensure the wireframe demonstrates a logical flow of the information. Especially in the restaurant detail page, start with summarized categories at the top. Also, Include clear and consistent navigation menus. Use descriptive labels like “Restaurant,” “About,” and “Login”</li>
+        <li>Minimalistic Layout:
+          Keep the design simple and uncluttered. Avoid excessive elements that might confuse users. Include adequate spacing between elements to prevent accidental clicks or touch errors.</li>
+      </ul>
+    </li>
+    <img src="wireframe.png"
+    style="height: 300px;"
+    alt="A screenshot of the wireframe of the website. From left to right, the pages are login page, Restaurant homepage, restaurant detail page, Write a review page and About page.">
+    <p><i>ALT Text: A screenshot of the wireframe of the website. From left to right, the pages are login page, Restaurant homepage, restaurant detail page, Write a review page and About page.</i></p>
     <li>Backend: Tri implemented the custom API used written in Python to manage lists of restaurants, their information, reviews, and ratings. </li>
-    <li>Frontend: Salma and Carla worked on making the website resemble the Figma wireframe using React and TypeScript. </li>
+    <li>Frontend: Salma and Carla worked on making the website resemble the Figma wireframe using React and TypeScript. We worked on the following pages:
+      <ul>
+        <li>Restaurant List: List of restaurants stored in the database.</li>
+        <li>Restaurant Details: Populate restaurant ratings, reviews, and general information.</li>
+        <li>Write a Review: Allow users to submit additional ratings and reviews to each restaurant.</li>
+        <li>About: Includes the mission of EasyEats and short introductions to each team member.</li>
+        <li>Login: Require users to login to submit a restaurant review and rating.</li>
+      </ul>
+    </li>
     <li>Backend Integration: We called the API for various components on the website, mainly the Restaurants and Login sections. A final working version of the website can be seen below.</li>
     <img src="restaurants.png"
     style="height: 200px;"
@@ -98,7 +123,7 @@
     alt="A screenshot of EasyEats website with a page titled “Aladdin Gyro-Cery & Deli”. It lists its accessibility ratings in the following categories: Ramp, Seating, Menu, Food, and Staff Decorum. It also includes restaurant summary with information related to hours, 
     location, phone number, menu, and price rang.">
     <p><i>ALT Text: A screenshot of EasyEats website with a page titled “Aladdin Gyro-Cery & Deli”. It lists its accessibility ratings in the following categories: Ramp, Seating, Menu, Food, and Staff Decorum. It also includes restaurant summary with information related to hours, 
-      location, phone number, menu, and price rang.</i></p>
+      location, phone number, menu, and price range.</i></p>
     <img src="reviews.png"
     style="height: 250px;"
     alt="A screenshot of the review section for the same page as above. It has two reviews written by Jane Doe and Tri Nguyen with their respective ratings. There are two “Write a review” buttons, one before the first review and one after the last review.">  
